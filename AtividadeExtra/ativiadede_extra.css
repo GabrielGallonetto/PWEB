@@ -1,0 +1,121 @@
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 20;
+    overflow: hidden;
+    background-color: #110b33;
+    margin-left: -10px;
+}
+
+nav li {
+    float: left;
+    border: 1px solid #423482;
+    margin-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+nav li a {
+    display: block;
+    color: #C2BAE8;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav li:hover {
+    background-color: #7A6DB5;
+    padding: auto;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    padding: 20px;
+}
+
+h1.Titulo {
+    padding-left: 20px;
+    color: #C2BAE8;
+    margin-bottom: 30px; 
+    margin-top: 30px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+body {
+    background: #05001b;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+article {
+    border: 2px solid black;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 300px;
+    margin-right: 300px;
+}
+
+p {
+    margin-top: 1px;
+    padding: 15px;
+}
+
+article.Gris {
+    background: linear-gradient(104deg, rgba(217, 30, 65, 1) 0%, rgba(242, 65, 113, 1) 50%, rgba(187, 242, 232, 1) 100%);
+    color: rgb(255, 255, 255);
+}
+
+article.Gris h2 {
+    color: #F2C9D1;
+}
+
+
+article.Katana {
+    background: linear-gradient(104deg, rgba(242, 56, 193, 1) 0%, rgba(167, 53, 242, 1) 50%, rgba(104, 5, 242, 1) 100%);
+    color: whitesmoke;
+}
+
+article.Katana h2 {
+    color: #35F287;
+}
+
+article.Spirit {
+    background: linear-gradient(90deg, rgba(8, 42, 64, 1) 0%, rgba(45, 102, 115, 1) 50%, rgba(90, 191, 163, 1) 100%);
+    color: #F2EFE9;
+}
+
+article.Spirit h2 {
+    color: #9BBFB5;
+}
+
+article.Hollow {
+    background: linear-gradient(104deg, rgba(10, 20, 38, 1) 0%, rgba(80, 89, 79, 1) 50%, rgba(140, 135, 125, 1) 100%);
+    color: whitesmoke;
+    margin-bottom: 0px;
+}
+
+article.Hollow h2 {
+    color: #D9D3D2;
+}
+
+img {
+    width: 40%;
+    border: 3px solid black;
+    margin: 5px;
+}
+
+footer {
+    color: #C2BAE8;
+}
+
+.container {
+    text-align: center; /* Alinha o conteúdo do contêiner ao centro */
+}
