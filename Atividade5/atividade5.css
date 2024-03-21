@@ -1,0 +1,71 @@
+div {
+    text-align: center;
+    margin: 10%;
+    padding: 10%;
+}
+
+@media screen and (min-width: 0px) and (max-width: 420px) {
+    #bloco {
+        background-color: #0ffff8;
+        color: #000000;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 420px";
+    }
+}
+
+@media screen and (min-width: 421px) and (max-width: 768px) {
+    #bloco {
+        background-color: #05d7e8;
+        color: #001d33;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 768px";
+    }
+}
+
+@media screen and (min-width: 789px) and (max-width: 1024px) {
+    #bloco {
+        background-color: #0a8d9e;
+        color: #003b5c;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 1024px";
+    }
+}
+
+@media screen and (min-width: 1025px) and (max-width: 1366px) {
+    #bloco {
+        background-color: #0e5561;
+        color: #00648d;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 1366px";
+    }
+}
+
+@media screen and (min-width: 1367px) and (max-width: 1920px) {
+    #bloco {
+        background-color: #0e5561;
+        color: #0099c3;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 1920px";
+    }
+}
+
+@media screen and (min-width: 1921px) and (max-width: 2200px) {
+    #bloco {
+        background-color: #112a32;
+        color: #00d9f9;
+    }
+
+    #bloco #texto::before {
+        content: "Tamanho 2200px";
+    }
+}
