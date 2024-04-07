@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JogoPedraPapelTesoura</title>
+</head>
+
+<body>
+    <script>
+        function Jogar(escolha) {
+            var computador;
+
+            computador = Math.floor((Math.random() * 10));
+
+            if (escolha == 1) {
+                // 1 a 3 é Pedra
+                // 4 a 6 é Papel
+                // 7 a 9 é Tesoura 
+
+                if (computador >= 1 && computador <= 3) {
+                    alert("O computador escolheu Pedra, logo é Empate!")
+                }
+
+                else if (computador >= 4 && computador <= 6) {
+                    alert("O computador escolheu Papel, logo Perdeu!")
+                }
+
+                else if (computador >= 7 && computador <= 9) {
+                    alert("O computador escolheu Tesoura, logo Ganhou!")
+                }
+            }
+
+            if (escolha == 2) {
+                // 1 a 3 é Pedra
+                // 4 a 6 é Papel
+                // 7 a 9 é Tesoura 
+
+                if (computador >= 1 && computador <= 3) {
+                    alert("O computador escolheu Pedra, logo Ganhou!")
+                }
+
+                else if (computador >= 4 && computador <= 6) {
+                    alert("O computador escolheu Papel, logo é Empate!")
+                }
+
+                else if (computador >= 7 && computador <= 9) {
+                    alert("O computador escolheu Tesoura, logo Perdeu!")
+                }
+            }
+
+            if (escolha == 3) {
+                // 1 a 3 é Pedra
+                // 4 a 6 é Papel
+                // 7 a 9 é Tesoura 
+
+                if (computador >= 1 && computador <= 3) {
+                    alert("O computador escolheu Pedra, logo Perdeu!")
+                }
+
+                else if (computador >= 4 && computador <= 6) {
+                    alert("O computador escolheu Papel, logo Ganhou")
+                }
+
+                else if (computador >= 7 && computador <= 9) {
+                    alert("O computador escolheu Tesoura, logo é Empate!")
+                }
+            }
+        }
+    </script>
+
+    <h1>JOGO PEDRA PAPEL TESOURA</h1>
+
+    <button onclick=Jogar(1)>Jogar PEDRA</button>
+    <button onclick=Jogar(2)>Jogar PAPEL</button>
+    <button onclick=Jogar(3)>Jogar TESOURA</button>
+</body>
+
+</html>
