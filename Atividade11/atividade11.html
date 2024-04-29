@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 11</title>
+</head>
+
+<body>
+    <script>
+        // função construtora
+        function FuncionarioConstrutora(matricula, nome, funcao) {
+            this.matricula = matricula;
+            this.nome = nome;
+            this.funcao = funcao;
+
+            alert("Funcionário (Função Construtora) \nMatrícula: " + this.matricula + "\nNome: " +
+            this.nome + "\nFunção: " + this.funcao)
+        }
+        var funcionario1 = new FuncionarioConstrutora(123, "Herick", "Investidor");
+
+        // literal
+        var funcionario2 = {
+            matricula: 456,
+            nome: "Igor",
+            funcao: "Estagiário"
+        };
+        alert("Funcionário (Literal) \nMatrícula: " + funcionario2.matricula + "\nNome: " +
+            funcionario2.nome + "\nFunção: " + funcionario2.funcao);
+
+        // classe
+        class FuncionarioClasse {
+            constructor(matricula, nome, funcao) {
+                this.matricula = matricula;
+                this.nome = nome;
+                this.funcao = funcao;
+            }
+
+            mostrarDados() {
+                alert("Funcionário (CLASSE) \nMatrícula: " + this.matricula + "\nNome: " +
+                    this.nome + "\nFunção: " + this.funcao);
+            }
+        }
+        var funcionario3 = new FuncionarioClasse(789, "João", "Assistente do Programador");
+        funcionario3.mostrarDados();
+    </script>
+</body>
+</html>
