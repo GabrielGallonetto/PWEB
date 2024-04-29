@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    padding: 20px;
+    background: rgb(0, 0, 0);
+    background: linear-gradient(167deg, rgba(0, 0, 0, 1) 0%, rgba(29, 85, 81, 1) 45%,
+     rgba(255, 255, 255, 1) 100%);
+}
+
+.geral {
+    max-width: 800px;
+    margin: 0 auto;
+    background: linear-gradient(167deg, rgba(212,212,212,1) 0%, rgba(246,246,246,1) 17%, rgba(255,255,255,1) 40%);
+    border-radius: 5px;
+    padding: 3%;
+    padding-top: 1%;
+    border: 1px solid #B3B3B3;
+    color: #72A9A5;
+}
+
+h1, h2 {
+    margin-bottom: 10px;
+    color: #407F7A;
+}
+
+#titulo-banco, #titulo-calculadora {
+    text-align: center;
+    color: #1D5450;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 50%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #72A9A5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #407F7A;
+}
+
+#resultados {
+    margin-top: 20px;
+}
+
+#resultados div {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px #1D5450;
+}
+
+#resultados div p {
+    margin-bottom: 5px;
+}
+
+#calculadora #resultado {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 4px #1D5450;
+}

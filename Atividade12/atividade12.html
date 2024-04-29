@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="atividade12.css">
+    <script src="atividade12.js"></script>
+    <title>Atividade 12</title>
+</head>
+
+<body>
+    <div class="geral">
+        <div id="calculadora">
+            <h1 id="titulo-calculadora">Calculadora de Área de Retângulo</h1>
+            <label for="base">Base:</label>
+            <input type="number" id="base" placeholder="Digite a base">
+            <label for="altura">Altura:</label>
+            <input type="number" id="altura" placeholder="Digite a altura"><p></p>
+            <button onclick="calcularArea()">Calcular Área</button>
+            <h2>Resultado Calculadora</h2>
+            <div id="resultado">                
+                <div id="resultado-calculadora-area"></div>
+            </div>            
+        </div>
+
+        <div id="conta-corrente">
+            <h1 id="titulo-banco">BANCO DA FATEC</h1>
+            <h2>Conta Corrente com Saldo Especial</h2>
+            <label for="nome-correntista-corrente">Nome do Correntista:</label>
+            <input type="text" id="nome-correntista-corrente"><br>
+            <label for="banco-corrente">Banco:</label>
+            <input type="text" id="banco-corrente"><br>
+            <label for="numero-conta-corrente">Número da Conta:</label>
+            <input type="text" id="numero-conta-corrente"><br>
+            <label for="saldo-corrente">Saldo:</label>
+            <input type="text" id="saldo-corrente"><br>
+            <label for="saldo-especial-corrente">Saldo Especial:</label>
+            <input type="text" id="saldo-especial-corrente"><br>
+            <button onclick="criarContaCorrente()">Criar Conta Corrente</button>
+        </div>
+
+        <div id="conta-poupanca">
+            <h2>Conta Poupança com Juros</h2>
+            <label for="nome-correntista-poupanca">Nome do Correntista:</label>
+            <input type="text" id="nome-correntista-poupanca"><br>
+            <label for="banco-poupanca">Banco:</label>
+            <input type="text" id="banco-poupanca"><br>
+            <label for="numero-conta-poupanca">Número da Conta:</label>
+            <input type="text" id="numero-conta-poupanca"><br>
+            <label for="saldo-poupanca">Saldo:</label>
+            <input type="text" id="saldo-poupanca"><br>
+            <label for="data-vencimento-poupanca">Data de Vencimento:</label>
+            <input type="text" id="data-vencimento-poupanca"><br>
+            <button onclick="criarContaPoupanca()">Criar Conta Poupança</button>
+        </div>
+
+        <div id="resultados">
+            <h2>Resultados</h2>
+            <div id="resultado-conta-corrente"></div>
+            <div id="resultado-conta-poupanca"></div>
+        </div>
+    </div>
+</body>
+</html>
