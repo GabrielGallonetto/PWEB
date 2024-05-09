@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.container h1 {
+    font-size: 24px;
+}
+
+.container img {
+    width: 200px;
+    height: 200px;
+    transition: transform 0.3s;
+}
+
+.container img:hover {
+    transform: scaleY(1.1);
+}
