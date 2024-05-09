@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformação de Texto</title>
+    <link rel="stylesheet" href="atividade14.css">
+
+</head>
+
+<div class="container">
+    <h2>Transformação de Texto</h2>
+    <label for="inputText" class="label-text">Texto:</label>
+    <input type="text" id="inputText" class="input-text">
+    <label class="checkbox-label">
+        <input type="checkbox" id="upperCaseCheckbox"> Transformar em maiúsculas
+    </label>
+    <label class="checkbox-label">
+        <input type="checkbox" id="lowerCaseCheckbox"> Transformar em minúsculas
+    </label>
+</div>
+<script>
+    const inputText = document.getElementById('inputText');
+    const upperCaseCheckbox = document.getElementById('upperCaseCheckbox');
+    const lowerCaseCheckbox = document.getElementById('lowerCaseCheckbox');
+    upperCaseCheckbox.addEventListener('change', () => {
+        if (upperCaseCheckbox.checked) {
+            inputText.value = inputText.value.toUpperCase();
+            lowerCaseCheckbox.checked = false; // Desmarca o outro checkbox
+        }
+    });
+    lowerCaseCheckbox.addEventListener('change', () => {
+        if (lowerCaseCheckbox.checked) {
+            inputText.value = inputText.value.toLowerCase();
+            upperCaseCheckbox.checked = false; // Desmarca o outro checkbox
+        }
+    });
+</script>
+</body>
+
+</html>
