@@ -1,0 +1,70 @@
+form {
+    width: 80%;
+    border: 1px #3A3A41 solid;
+    margin-left: 10%;
+    margin-right: 10%;
+    padding: 1%;
+    text-align: left;
+    border-radius: 1%;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #3A3A41;
+}
+
+#nome {
+    width: 50%;
+    font-size: 18px; 
+    padding-left: 0.5%;
+    margin-top: 3%;
+}
+
+#email {
+    width: 55%;
+    font-size: 18px; 
+    padding-left: 0.5%;
+}
+
+label , p {
+    margin-left: 3%;
+}
+
+button {
+    display: inline-block;
+    gap: 40px;
+    margin-left: 3% ;
+    background-color: #595696;
+    color: aliceblue;
+    border: 1px #3A3A41 solid;
+}
+
+#submit {
+    margin-left: 40% ;
+}
+
+#comentario {
+    width: 80%;
+    min-width: 80%;
+    max-width: 80%;
+    height: 130px;
+    resize: none;
+    word-wrap: break-word;
+    align-items: center;
+    padding-left: 0.5%;
+    margin-left: 3%;
+}
+
+#radio {
+    display: inline-block;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Calibri;
+    background: linear-gradient(167deg, rgba(65,56,235,1) 0%, rgba(89,86,150,1) 80%, rgba(58,58,65,1) 100%);
+    background-size: cover;
+}
+
+h1 {
+    text-align: center;
+    color: #3A3A41;
+}
