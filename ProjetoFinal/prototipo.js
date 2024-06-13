@@ -236,6 +236,122 @@ function mostrarFeedback(mensagem, classe) {
     }, 3000);
 }
 
+// Função para atualizar a tabela de eventos com eventos fornecidos
+function atualizarTabelaEventos(eventos) {
+    // Limpa o conteúdo atual da tabela
+    tabelaEventos.innerHTML = '';
+
+    // Itera sobre cada evento e cria uma linha na tabela para cada um
+    eventos.forEach(evento => {
+        const linha = document.createElement('tr');
+        linha.dataset.id = evento.id || '';
+
+        // Criação das células da linha
+        const tdId = document.createElement('td');
+        const inputId = document.createElement('input');
+        inputId.type = 'text';
+        inputId.value = evento.id || '';
+        inputId.disabled = true;
+        tdId.appendChild(inputId);
+        linha.appendChild(tdId);
+
+        const tdTitulo = document.createElement('td');
+        const inputTitulo = document.createElement('input');
+        inputTitulo.type = 'text';
+        inputTitulo.value = evento.titulo || '';
+        tdTitulo.appendChild(inputTitulo);
+        linha.appendChild(tdTitulo);
+
+        const tdCategoria = document.createElement('td');
+        const selectCategoria = document.createElement('select');
+        Config.categoriasExistentes.forEach(categoria => {
+            const option = document.createElement('option');
+            option.value = categoria;
+            option.textContent = categoria;
+            if (categoria === evento.categoria) {
+                option.selected = true;
+            }
+            selectCategoria.appendChild(option);
+        });
+        tdCategoria.appendChild(selectCategoria);
+        linha.appendChild(tdCategoria);
+
+        const tdData = document.createElement('td');
+        const inputData = document.createElement('input');
+        inputData.type = 'date';
+        inputData.value = evento.data || '';
+        inputData.min = new Date().toISOString().split('T')[0]; // Define a data mínima como hoje
+        tdData.appendChild(inputData);
+        linha.appendChild(tdData);
+
+        const tdDescricao = document.createElement('td');
+        const inputDescricao = document.createElement('input');
+        inputDescricao.type = 'text';
+        inputDescricao.value = evento.descricao || '';
+        tdDescricao.appendChild(inputDescricao);
+        linha.appendChild(tdDescricao);
+
+        const tdPrioridade = document.createElement('td');
+        const selectPrioridade = document.createElement('select');
+        Config.prioridades.forEach(prioridade => {
+            const option = document.createElement('option');
+            option.value = prioridade;
+            option.textContent = prioridade;
+            if (prioridade === evento.prioridade) {
+                option.selected = true;
+            }
+            selectPrioridade.appendChild(option);
+        });
+        tdPrioridade.appendChild(selectPrioridade);
+        linha.appendChild(tdPrioridade);
+
+        const tdStatus = document.createElement('td');
+        const selectStatus = document.createElement('select');
+        Config.status.forEach(status => {
+            const option = document.createElement('option');
+            option.value = status;
+            option.textContent = status;
+            if (status === evento.status) {
+                option.selected = true;
+            }
+            selectStatus.appendChild(option);
+        });
+        tdStatus.appendChild(selectStatus);
+        linha.appendChild(tdStatus);
+
+        // Criação da célula de urgência
+        const tdUrgencia = document.createElement('td');
+        const divUrgencia = calcularUrgencia(evento.data);
+        tdUrgencia.appendChild(divUrgencia);
+        linha.appendChild(tdUrgencia);
+
+        // Criação da célula de ações
+        const tdAcoes = document.createElement('td');
+        const btnSalvar = document.createElement('button');
+        btnSalvar.textContent = 'Salvar';
+        btnSalvar.addEventListener('click', () => salvarEvento(linha));
+        tdAcoes.appendChild(btnSalvar);
+
+        const btnCancelar = document.createElement('button');
+        btnCancelar.textContent = 'Cancelar';
+        btnCancelar.addEventListener('click', () => cancelarAdicao(linha));
+        tdAcoes.appendChild(btnCancelar);
+
+        if (evento.id) { // Adicionar botão Excluir apenas para eventos existentes
+            const btnExcluir = document.createElement('button');
+            btnExcluir.textContent = 'Excluir';
+            btnExcluir.addEventListener('click', () => excluirEvento(evento.id));
+            tdAcoes.appendChild(btnExcluir);
+        }
+
+        linha.appendChild(tdAcoes);
+
+        // Adiciona a linha à tabela de eventos
+        tabelaEventos.appendChild(linha);
+    });
+}
+
+
 // Função para pesquisar eventos na tabela
 function pesquisarEventos() {
     const textoPesquisa = inputPesquisa.value.trim().toLowerCase();
