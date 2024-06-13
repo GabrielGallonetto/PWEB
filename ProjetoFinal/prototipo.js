@@ -14,37 +14,107 @@ const botaoAtualizar = document.getElementById('atualizarEventos');
 const botaoAdicionar = document.getElementById('adicionarEvento');
 const calendario = document.getElementById('calendar');
 
-// Função para carregar eventos do localStorage
-function carregarEventos() {
-    let eventos = JSON.parse(localStorage.getItem('eventos')) || [];
-    return eventos;
-}
+document.addEventListener('DOMContentLoaded', function () {
+    // Verifica se está na página de finalizados
+    if (document.title === 'Finalizados') {
+        // Oculta o filtro de status na página de finalizados
+        filtroStatus.style.display = 'none';
 
-// Função para salvar eventos no localStorage
-function salvarEventos(eventos) {
-    localStorage.setItem('eventos', JSON.stringify(eventos));
-}
-
-// Função para salvar um evento no localStorage
-function salvarEventoLocalStorage(evento) {
-    let eventos = JSON.parse(localStorage.getItem('eventos')) || [];
-
-    // Verifica se já existe um evento com o mesmo ID e o substitui
-    const index = eventos.findIndex(e => e.id === evento.id);
-    if (index !== -1) {
-        eventos[index] = evento;
+        // Inicializa a tabela de eventos concluídos
+        buscarEventosConcluidos();
     } else {
-        eventos.push(evento);
+        // Caso contrário, inicializa a tabela de eventos padrão
+        inicializarTabelaEventos();
     }
 
-    localStorage.setItem('eventos', JSON.stringify(eventos));
+    // Inicializa o calendário se houver um elemento de calendário na página
+    if (calendario) {
+        inicializarCalendario();
+    }
+});
+
+// Função para pesquisar eventos na tabela
+const pesquisarEventos = () => {
+    const textoPesquisa = inputPesquisa.value.trim().toLowerCase();
+    const statusFiltro = filtroStatus.value;
+
+    let eventos = carregarEventos();
+    let eventosFiltrados = eventos.filter(evento => {
+        const titulo = evento.titulo.toLowerCase();
+        const descricao = evento.descricao.toLowerCase();
+        const categoria = evento.categoria.toLowerCase();
+
+        // Verifica se o texto de pesquisa está presente no título, descrição ou categoria
+        return titulo.includes(textoPesquisa) ||
+               descricao.includes(textoPesquisa) ||
+               categoria.includes(textoPesquisa);
+    });
+
+    // Filtra também pelo status, se selecionado
+    if (statusFiltro) {
+        eventosFiltrados = eventosFiltrados.filter(evento => evento.status === statusFiltro);
+    }
+
+    // Atualiza a tabela com os eventos filtrados
+    atualizarTabelaEventos(eventosFiltrados);
+};
+
+// Função para buscar eventos com base no status
+const buscarEventos = (status = '') => {
+    const eventos = carregarEventos();
+    const eventosFiltrados = status ? eventos.filter(evento => evento.status === status) : eventos;
+
+    // Atualiza a tabela com os eventos filtrados
+    atualizarTabelaEventos(eventosFiltrados);
+};
+
+
+// Função para atualizar a tabela de eventos com eventos filtrados
+function atualizarTabelaEventos(eventos) {
+    tabelaEventos.innerHTML = '';
+    eventos.forEach(evento => {
+        criarLinhaEvento(evento);
+    });
 }
 
-// Função para excluir um evento do localStorage
-function excluirEventoLocalStorage(id) {
-    let eventos = JSON.parse(localStorage.getItem('eventos')) || [];
-    eventos = eventos.filter(evento => evento.id !== id);
-    localStorage.setItem('eventos', JSON.stringify(eventos));
+// Função para inicializar a tabela de eventos
+const inicializarTabelaEventos = () => {
+    let eventos = carregarEventos();
+    eventos.forEach(evento => {
+        criarLinhaEvento(evento);
+    });
+
+    // Adiciona event listeners
+    botaoAdicionar.addEventListener('click', adicionarLinhaEvento);
+    inputPesquisa.addEventListener('input', pesquisarEventos);
+    filtroStatus.addEventListener('change', () => buscarEventos(filtroStatus.value));
+};
+
+// Função para inicializar a tabela de eventos concluídos
+const inicializarTabelaEventosFinalizados = () => {
+    let eventos = carregarEventos();
+    eventos = eventos.filter(evento => evento.status === 'Concluído');
+    eventos.forEach(evento => {
+        criarLinhaEvento(evento);
+    });
+
+    // Adiciona event listeners
+    botaoAdicionar.addEventListener('click', adicionarLinhaEvento);
+    inputPesquisa.addEventListener('input', pesquisarEventos);
+};
+
+// Função para adicionar uma linha de evento
+const adicionarLinhaEvento = () => {
+    criarLinhaEvento();
+};
+
+// Função para atualizar a tabela de eventos
+function atualizarTabela() {
+    let eventos = carregarEventos();
+    tabelaEventos.innerHTML = '';
+    eventos.forEach(evento => {
+        criarLinhaEvento(evento);
+    });
 }
 
 // Função para calcular a urgência do evento e retornar um elemento visual
@@ -72,8 +142,70 @@ function calcularUrgencia(dataEvento) {
     return divUrgencia;
 }
 
+
+
+// Função para carregar eventos do localStorage
+const carregarEventos = () => {
+    return JSON.parse(localStorage.getItem('eventos')) || [];
+};
+
+// Função para salvar eventos no localStorage
+const salvarEventoLocalStorage = (evento) => {
+    let eventos = JSON.parse(localStorage.getItem('eventos')) || [];
+    const index = eventos.findIndex(ev => ev.id === evento.id);
+
+    if (index !== -1) {
+        eventos[index] = evento;
+    } else {
+        eventos.push(evento);
+    }
+
+    localStorage.setItem('eventos', JSON.stringify(eventos));
+};
+
+// Função para inicializar o calendário se necessário
+const inicializarCalendario = () => {
+    if (calendario) {
+        const calendar = new FullCalendar.Calendar(calendario, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: JSON.parse(localStorage.getItem('eventos')) || []
+        });
+        calendar.render();
+    }
+};
+
+// Função para calcular a urgência do evento e retornar um elemento visual
+function calcularUrgencia(dataEvento) {
+    let hoje = new Date();
+    let data = new Date(dataEvento);
+    let diffDias = Math.floor((data - hoje) / (1000 * 60 * 60 * 24));
+
+    let cor = 'green';
+    let texto = 'Baixa'; // Texto padrão para baixa urgência
+
+    if (diffDias <= 7 && diffDias > 3) {
+        cor = 'yellow';
+        texto = 'Média';
+    } else if (diffDias <= 3) {
+        cor = 'red';
+        texto = 'Alta';
+    }
+
+    const divUrgencia = document.createElement('div');
+    divUrgencia.className = 'urgencia';
+    divUrgencia.style.backgroundColor = cor;
+    divUrgencia.textContent = texto;
+
+    return divUrgencia;
+}
+
 // Função para criar uma linha de evento
-function criarLinhaEvento(evento = {}) {
+const criarLinhaEvento = (evento = {}) => {
     const linha = document.createElement('tr');
     linha.dataset.id = evento.id || '';
 
@@ -150,52 +282,131 @@ function criarLinhaEvento(evento = {}) {
     tdStatus.appendChild(selectStatus);
     linha.appendChild(tdStatus);
 
-    // Criação da célula de urgência
     const tdUrgencia = document.createElement('td');
-    const divUrgencia = calcularUrgencia(evento.data);
-    tdUrgencia.appendChild(divUrgencia);
+    tdUrgencia.appendChild(calcularUrgencia(evento.data));
     linha.appendChild(tdUrgencia);
 
-    // Criação da célula de ações
     const tdAcoes = document.createElement('td');
-    const btnSalvar = document.createElement('button');
-    btnSalvar.textContent = 'Salvar';
-    btnSalvar.addEventListener('click', () => salvarEvento(linha));
-    tdAcoes.appendChild(btnSalvar);
+    const botaoSalvar = document.createElement('button');
+    botaoSalvar.textContent = 'Salvar';
+    botaoSalvar.className = 'btnSalvar';
+    botaoSalvar.addEventListener('click', () => salvarEvento(linha));
+    tdAcoes.appendChild(botaoSalvar);
 
-    const btnCancelar = document.createElement('button');
-    btnCancelar.textContent = 'Cancelar';
-    btnCancelar.addEventListener('click', () => cancelarAdicao(linha));
-    tdAcoes.appendChild(btnCancelar);
-
-    if (evento.id) { // Adicionar botão Excluir apenas para eventos existentes
-        const btnExcluir = document.createElement('button');
-        btnExcluir.textContent = 'Excluir';
-        btnExcluir.addEventListener('click', () => excluirEvento(evento.id));
-        tdAcoes.appendChild(btnExcluir);
-    }
+    const botaoCancelar = document.createElement('button');
+    botaoCancelar.textContent = 'Cancelar';
+    botaoCancelar.className = 'btnCancelar';
+    botaoCancelar.addEventListener('click', () => cancelarAdicao(linha));
+    tdAcoes.appendChild(botaoCancelar);
 
     linha.appendChild(tdAcoes);
 
     tabelaEventos.appendChild(linha);
+};
+
+
+// Função para calcular a urgência do evento e retornar um elemento visual
+function calcularUrgencia(dataEvento) {
+    let hoje = new Date();
+    let data = new Date(dataEvento);
+    let diffDias = Math.floor((data - hoje) / (1000 * 60 * 60 * 24));
+
+    let cor = 'green';
+    let texto = 'Baixa'; // Texto padrão para baixa urgência
+
+    if (diffDias <= 7 && diffDias > 3) {
+        cor = 'yellow';
+        texto = 'Média';
+    } else if (diffDias <= 3) {
+        cor = 'red';
+        texto = 'Alta';
+    }
+
+    const divUrgencia = document.createElement('div');
+    divUrgencia.className = 'urgencia';
+    divUrgencia.style.backgroundColor = cor;
+    divUrgencia.textContent = texto;
+
+    return     divUrgencia;
+
+    return divUrgencia;
 }
 
-// Função para adicionar uma linha de evento
-function adicionarLinhaEvento() {
-    criarLinhaEvento();
-}
+// Função para criar uma linha de evento na página de finalizados
+const criarLinhaEventoFinalizados = (evento = {}) => {
+    const linha = document.createElement('tr');
+    linha.dataset.id = evento.id || '';
 
-// Função para atualizar a tabela de eventos
-function atualizarTabela() {
-    let eventos = carregarEventos();
+    // Criação das células da linha
+    const tdId = document.createElement('td');
+    const inputId = document.createElement('input');
+    inputId.type = 'text';
+    inputId.value = evento.id || '';
+    inputId.disabled = true;
+    tdId.appendChild(inputId);
+    linha.appendChild(tdId);
+
+    const tdTitulo = document.createElement('td');
+    tdTitulo.textContent = evento.titulo || '';
+    linha.appendChild(tdTitulo);
+
+    const tdCategoria = document.createElement('td');
+    tdCategoria.textContent = evento.categoria || '';
+    linha.appendChild(tdCategoria);
+
+    const tdData = document.createElement('td');
+    tdData.textContent = evento.data || '';
+    linha.appendChild(tdData);
+
+    const tdDescricao = document.createElement('td');
+    tdDescricao.textContent = evento.descricao || '';
+    linha.appendChild(tdDescricao);
+
+    const tdPrioridade = document.createElement('td');
+    tdPrioridade.textContent = evento.prioridade || '';
+    linha.appendChild(tdPrioridade);
+
+    const tdStatus = document.createElement('td');
+    tdStatus.textContent = evento.status || '';
+    linha.appendChild(tdStatus);
+
+    const tdUrgencia = document.createElement('td');
+    tdUrgencia.appendChild(calcularUrgencia(evento.data));
+    linha.appendChild(tdUrgencia);
+
+    tabelaEventos.appendChild(linha);
+};
+
+// Função para buscar eventos concluídos
+const buscarEventosConcluidos = () => {
+    const eventos = carregarEventos();
+    const eventosConcluidos = eventos.filter(evento => evento.status === 'Concluído');
+    atualizarTabelaEventosConcluidos(eventosConcluidos);
+};
+
+// Função para atualizar a tabela de eventos concluídos
+const atualizarTabelaEventosConcluidos = (eventos) => {
     tabelaEventos.innerHTML = '';
     eventos.forEach(evento => {
-        criarLinhaEvento(evento);
+        criarLinhaEventoFinalizados(evento);
     });
-}
+};
+
+// Event listeners específicos da página de finalizados
+document.addEventListener('DOMContentLoaded', function () {
+    // Verifica se está na página de finalizados
+    if (document.title === 'Finalizados') {
+        buscarEventosConcluidos();
+    }
+
+    // Adiciona event listeners gerais
+    botaoAdicionar.addEventListener('click', adicionarLinhaEvento);
+    inputPesquisa.addEventListener('input', pesquisarEventos);
+    filtroStatus.addEventListener('change', () => buscarEventos(filtroStatus.value));
+});
 
 // Função para salvar um evento
-function salvarEvento(linha) {
+const salvarEvento = (linha) => {
     const id = linha.dataset.id || null;
     const novoEvento = {
         id: id || Date.now(), // Gera um ID único se não houver ID definido
@@ -216,296 +427,29 @@ function salvarEvento(linha) {
         mostrarFeedback('Evento salvo com sucesso!', 'alert alert-success');
     }
 
-    atualizarTabela();
-}
+    // Atualiza a tabela dependendo da página atual
+    if (document.title === 'Finalizados') {
+        buscarEventosConcluidos();
+    } else {
+        atualizarTabela();
+    }
+};
 
 // Função para cancelar a adição ou edição de um evento
-function cancelarAdicao(linha) {
+const cancelarAdicao = (linha) => {
     if (!linha.dataset.id) { // Remove a linha apenas se for uma adição cancelada
         linha.remove();
     }
-}
+};
 
 // Função para mostrar feedback ao usuário
-function mostrarFeedback(mensagem, classe) {
+const mostrarFeedback = (mensagem, classe) => {
     feedback.textContent = mensagem;
     feedback.className = classe;
     feedback.style.display = 'block';
     setTimeout(() => {
         feedback.style.display = 'none';
     }, 3000);
-}
-
-// Função para atualizar a tabela de eventos com eventos fornecidos
-function atualizarTabelaEventos(eventos) {
-    // Limpa o conteúdo atual da tabela
-    tabelaEventos.innerHTML = '';
-
-    // Itera sobre cada evento e cria uma linha na tabela para cada um
-    eventos.forEach(evento => {
-        const linha = document.createElement('tr');
-        linha.dataset.id = evento.id || '';
-
-        // Criação das células da linha
-        const tdId = document.createElement('td');
-        const inputId = document.createElement('input');
-        inputId.type = 'text';
-        inputId.value = evento.id || '';
-        inputId.disabled = true;
-        tdId.appendChild(inputId);
-        linha.appendChild(tdId);
-
-        const tdTitulo = document.createElement('td');
-        const inputTitulo = document.createElement('input');
-        inputTitulo.type = 'text';
-        inputTitulo.value = evento.titulo || '';
-        tdTitulo.appendChild(inputTitulo);
-        linha.appendChild(tdTitulo);
-
-        const tdCategoria = document.createElement('td');
-        const selectCategoria = document.createElement('select');
-        Config.categoriasExistentes.forEach(categoria => {
-            const option = document.createElement('option');
-            option.value = categoria;
-            option.textContent = categoria;
-            if (categoria === evento.categoria) {
-                option.selected = true;
-            }
-            selectCategoria.appendChild(option);
-        });
-        tdCategoria.appendChild(selectCategoria);
-        linha.appendChild(tdCategoria);
-
-        const tdData = document.createElement('td');
-        const inputData = document.createElement('input');
-        inputData.type = 'date';
-        inputData.value = evento.data || '';
-        inputData.min = new Date().toISOString().split('T')[0]; // Define a data mínima como hoje
-        tdData.appendChild(inputData);
-        linha.appendChild(tdData);
-
-        const tdDescricao = document.createElement('td');
-        const inputDescricao = document.createElement('input');
-        inputDescricao.type = 'text';
-        inputDescricao.value = evento.descricao || '';
-        tdDescricao.appendChild(inputDescricao);
-        linha.appendChild(tdDescricao);
-
-        const tdPrioridade = document.createElement('td');
-        const selectPrioridade = document.createElement('select');
-        Config.prioridades.forEach(prioridade => {
-            const option = document.createElement('option');
-            option.value = prioridade;
-            option.textContent = prioridade;
-            if (prioridade === evento.prioridade) {
-                option.selected = true;
-            }
-            selectPrioridade.appendChild(option);
-        });
-        tdPrioridade.appendChild(selectPrioridade);
-        linha.appendChild(tdPrioridade);
-
-        const tdStatus = document.createElement('td');
-        const selectStatus = document.createElement('select');
-        Config.status.forEach(status => {
-            const option = document.createElement('option');
-            option.value = status;
-            option.textContent = status;
-            if (status === evento.status) {
-                option.selected = true;
-            }
-            selectStatus.appendChild(option);
-        });
-        tdStatus.appendChild(selectStatus);
-        linha.appendChild(tdStatus);
-
-        // Criação da célula de urgência
-        const tdUrgencia = document.createElement('td');
-        const divUrgencia = calcularUrgencia(evento.data);
-        tdUrgencia.appendChild(divUrgencia);
-        linha.appendChild(tdUrgencia);
-
-        // Criação da célula de ações
-        const tdAcoes = document.createElement('td');
-        const btnSalvar = document.createElement('button');
-        btnSalvar.textContent = 'Salvar';
-        btnSalvar.addEventListener('click', () => salvarEvento(linha));
-        tdAcoes.appendChild(btnSalvar);
-
-        const btnCancelar = document.createElement('button');
-        btnCancelar.textContent = 'Cancelar';
-        btnCancelar.addEventListener('click', () => cancelarAdicao(linha));
-        tdAcoes.appendChild(btnCancelar);
-
-        if (evento.id) { // Adicionar botão Excluir apenas para eventos existentes
-            const btnExcluir = document.createElement('button');
-            btnExcluir.textContent = 'Excluir';
-            btnExcluir.addEventListener('click', () => excluirEvento(evento.id));
-            tdAcoes.appendChild(btnExcluir);
-        }
-
-        linha.appendChild(tdAcoes);
-
-        // Adiciona a linha à tabela de eventos
-        tabelaEventos.appendChild(linha);
-    });
-}
+};
 
 
-// Função para pesquisar eventos na tabela
-function pesquisarEventos() {
-    const textoPesquisa = inputPesquisa.value.trim().toLowerCase();
-    const statusFiltro = filtroStatus.value;
-
-    let eventos = carregarEventos();
-    let eventosFiltrados = eventos.filter(evento => {
-        const titulo = evento.titulo.toLowerCase();
-        const descricao = evento.descricao.toLowerCase();
-        const categoria = evento.categoria.toLowerCase();
-
-        // Verifica se o texto de pesquisa está presente no título, descrição ou
-        return titulo.includes(textoPesquisa) ||
-               descricao.includes(textoPesquisa) ||
-               categoria.includes(textoPesquisa);
-    });
-
-    // Filtra também pelo status, se selecionado
-    if (statusFiltro) {
-        eventosFiltrados = eventosFiltrados.filter(evento => evento.status === statusFiltro);
-    }
-
-    // Atualiza a tabela com os eventos filtrados
-    atualizarTabelaEventos(eventosFiltrados);
-}
-
-// Função para buscar eventos com base no status
-function buscarEventos(status = '') {
-    const eventos = carregarEventos();
-    const eventosFiltrados = status ? eventos.filter(evento => evento.status === status) : eventos;
-
-    // Atualiza a tabela com os eventos filtrados
-    atualizarTabelaEventos(eventosFiltrados);
-}
-
-// Função para inicializar a tabela de eventos
-function inicializarTabelaEventos() {
-    let eventos = carregarEventos();
-    eventos.forEach(evento => {
-        criarLinhaEvento(evento);
-    });
-
-    // Adiciona event listeners
-    botaoAdicionar.addEventListener('click', adicionarLinhaEvento);
-    inputPesquisa.addEventListener('input', pesquisarEventos);
-    filtroStatus.addEventListener('change', () => buscarEventos(filtroStatus.value));
-}
-
-
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    inicializarTabelaEventos();
-    adicionarEventListeners();
-});
-
-// Função para adicionar um evento
-function adicionarEvento() {
-    let tbody = document.querySelector('#tabelaEventos tbody');
-    let tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td>#</td>
-        <td><input type="text" id="novoTitulo" placeholder="Título"></td>
-        <td>
-            <select id="novaPrioridade">
-                <option value="Baixa">Baixa</option>
-                <option value="Média">Média</option>
-                <option value="Alta">Alta</option>
-            </select>
-        </td>
-        <td><input type="date" id="novaData"></td>
-        <td><input type="text" id="novaDescricao" placeholder="Descrição"></td>
-        <td>
-            <select id="novoStatus">
-                <option value="Pendente">Pendente</option>
-                <option value="Em Andamento">Em Andamento</option>
-                <option value="Concluído">Concluído</option>
-            </select>
-        </td>
-        <td></td>
-        <td><button onclick="salvarNovoEvento()">Salvar</button></td>
-    `;
-    tbody.appendChild(tr);
-}
-
-// Função para salvar o novo evento
-function salvarNovoEvento() {
-    let eventos = carregarEventos();
-    let novoEvento = {
-        id: eventos.length ? eventos[eventos.length - 1].id + 1 : 1,
-        titulo: document.getElementById('novoTitulo').value,
-        categoria: document.getElementById('novaCategoria').value,
-        data: document.getElementById('novaData').value,
-        descricao: document.getElementById('novaDescricao').value,
-        prioridade: document.getElementById('novaPrioridade').value,
-        status: document.getElementById('novoStatus').value
-    };
-    eventos.push(novoEvento);
-    salvarEventos(eventos);
-    atualizarTabela();
-}
-
-// Função para atualizar a lista de eventos
-function atualizarEventos() {
-    atualizarTabela();
-}
-
-// Função para limpar eventos
-function limparEventos() {
-    localStorage.removeItem('eventos');
-    atualizarTabela();
-}
-
-// Função para editar um evento
-function editarEvento(id) {
-    let eventos = carregarEventos();
-    let evento = eventos.find(evento => evento.id === id);
-    if (evento) {
-        evento.titulo = prompt("Título do evento:", evento.titulo);
-        evento.categoria = prompt("Categoria do evento:", evento.categoria);
-        evento.data = prompt("Data do evento:", evento.data);
-        evento.descricao = prompt("Descrição do evento:", evento.descricao);
-        evento.prioridade = prompt("Prioridade do evento:", evento.prioridade);
-        evento.status = prompt("Status do evento:", evento.status);
-        salvarEventos(eventos);
-        atualizarTabela();
-    }
-}
-
-// Função para remover um evento
-function removerEvento(id) {
-    let eventos = carregarEventos();
-    eventos = eventos.filter(evento => evento.id !== id);
-    salvarEventos(eventos);
-    atualizarTabela();
-}
-
-// Funções de manipulação de DOM e Event Listeners
-function adicionarEventListeners() {
-    inputPesquisa.addEventListener('input', pesquisarEventos);
-    botaoAdicionar.addEventListener('click', adicionarLinhaEvento);
-    filtroStatus.addEventListener('change', () => buscarEventos(filtroStatus.value));
-
-    if (botaoAtualizar) {
-        botaoAtualizar.addEventListener('click', () => {
-            if (document.title === 'Finalizados') {
-                atualizarEventosConcluidos();
-            } else {
-                atualizarTabela();
-            }
-        });
-    }
-}
-
-inputPesquisa.addEventListener('input', pesquisarEventos);
-
-filtroStatus.addEventListener('change', () => buscarEventos(filtroStatus.value));
